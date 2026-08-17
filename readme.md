@@ -1,3 +1,49 @@
+# Lead Scoring System — Complete Architecture, Implementation, Operations, and Royal Enfield Production Documentation
+
+> This document consolidates the complete lead-scoring documentation into a single Markdown knowledge base. It includes:
+>
+> 1. Lead scoring fundamentals and models
+> 2. Generic end-to-end data architecture and machine learning concepts
+> 3. Pipeline processing, feature engineering, inference, delivery, monitoring, and recovery
+> 4. Backfills, idempotency, watermarks, debugging, data lineage, and model versioning
+> 5. Royal Enfield's actual production implementation, real tables, services, constraints, bugs, fixes, reconciliation, alerting, reporting, and UAT environment
+>
+> **Important:** Where the Royal Enfield implementation differs from the generic/conceptual architecture, the Royal Enfield section documents the actual production behavior.
+
+---
+
+## Table of Contents
+
+1. Introduction and Fundamentals
+2. Lead Scoring Models
+3. Data Pillars and Feature Engineering
+4. Generic System Architecture and Data Flow
+5. Pipeline Processing Layers
+6. Identity Resolution
+7. Data Leakage Prevention
+8. Model Inference and Prediction Output
+9. Scheduling and Dependency Management
+10. CRM Delivery
+11. Backfills and Incremental Processing
+12. Idempotency, Processing State, and Watermarks
+13. Error Handling and Failure Scenarios
+14. Monitoring and Alerting
+15. Debugging and Data Lineage
+16. Audit Fields and Model Versioning
+17. Training vs. Inference
+18. System Responsibilities and Key Takeaways
+19. Royal Enfield Production Implementation
+20. Royal Enfield Architecture and Data Sources
+21. Royal Enfield Identity Resolution and GA4 Constraints
+22. Royal Enfield Feature Engineering and Model Logic
+23. Royal Enfield Output and Delivery Paths
+24. Leakage Gates, Bugs, and Fixes
+25. Reconciliation and Backfill Sweeper
+26. Monitoring, Dashboard, Reporting, and UAT
+27. Royal Enfield Glossary
+
+---
+
 The Ultimate Guide to Lead Scoring: Models, Architecture, and Implementation
 [PAGE 1] Introduction & Fundamentals of Lead Scoring
 The Core Problem
@@ -162,34 +208,24 @@ Cost of Customer Acquisition (CAC): Targeted outreach should lower the overall c
 
 Conclusion
 Lead scoring transforms a reactive sales floor into a proactive, data-driven revenue engine. By strategically utilizing explicit demographics, implicit behaviors, and a robust engineering pipeline, organizations can ensure that their most valuable resource—sales time—is spent exclusively on prospects ready to buy.
-
-Bhai, yeh document copy-paste ke liye ekdum ready hai! Isme business logic se lekar technical architecture aur KPIs tak sab kuch smoothly cover ho gaya hai. Aap isko as a standard template apne kisi bhi presentation ya documentation mein confidently use kar sakte hain.
-
-
-
-
 # Lead Scoring System
-
 ## Functional, Data Flow, and Technical Documentation
-
 ---
 
 ## 1. Overview
-
-The **Lead Scoring System** is a machine learning–driven pipeline designed to identify and prioritize leads based on their likelihood of conversion.
+The ****Lead Scoring System**** is a machine learning–driven pipeline designed to identify and prioritize leads based on their likelihood of conversion.
 
 Instead of treating every incoming lead equally, the system analyzes available customer, CRM, website, and behavioral information and assigns a score or prediction indicating the likelihood that a lead will perform the target business action.
 
 The overall objective is:
 
-> **Capture leads → enrich them with historical and behavioral information → generate predictions → make the scored leads available to downstream CRM/business systems.**
+\> ****Capture leads → enrich them with historical and behavioral information → generate predictions → make the scored leads available to downstream CRM/business systems.****
 
 This helps the business prioritize high-value leads and focus sales or marketing efforts on users with a higher probability of conversion.
 
 ---
 
 # 2. What is Lead Scoring?
-
 Lead scoring is the process of assigning a numerical score, probability, or category to a lead based on how likely that lead is to convert.
 
 For example:
@@ -217,7 +253,6 @@ Examples include:
 ---
 
 # 3. Why Do We Need Lead Scoring?
-
 Without lead scoring, sales teams may treat all leads similarly.
 
 This creates several problems:
@@ -232,16 +267,15 @@ The lead scoring model solves this by using historical data to identify patterns
 
 The goal is not simply:
 
-> "Which lead is good?"
+\> "Which lead is good?"
 
 Instead, the machine learning problem is:
 
-> **"Based on the information available for this lead, what is the probability that this lead will convert?"**
+\> ****"Based on the information available for this lead, what is the probability that this lead will convert?"****
 
 ---
 
 # 4. High-Level Architecture
-
 The overall flow of the system can be represented as:
 
 ```text
@@ -296,11 +330,9 @@ The overall flow of the system can be represented as:
 ---
 
 # 5. Major Components of the Pipeline
-
 The pipeline consists of multiple stages.
 
 ## 5.1 Raw Lead Data Layer
-
 The raw data layer stores incoming lead information.
 
 One of the key tables involved is:
@@ -323,7 +355,6 @@ The purpose of this layer is to create a structured dataset that downstream pipe
 ---
 
 # 6. Lead Data Sources
-
 The system can ingest lead data from multiple sources.
 
 Examples discussed in the existing pipeline include:
@@ -363,7 +394,6 @@ A conceptual flow looks like:
 ---
 
 # 7. Raw Lead Storage
-
 The raw lead table acts as the starting point for scoring.
 
 Conceptually, a lead record may contain information such as:
@@ -393,7 +423,6 @@ The key requirement is that the lead should contain enough information to:
 ---
 
 # 8. Data Processing Pipeline
-
 The processing pipeline can be understood in the following stages:
 
 ```text
@@ -415,8 +444,7 @@ Each layer has a specific responsibility.
 ---
 
 # 9. Base Data
-
-The **Base Data** layer prepares the fundamental dataset required for further processing.
+The ****Base Data**** layer prepares the fundamental dataset required for further processing.
 
 Typical responsibilities include:
 
@@ -449,7 +477,6 @@ Its main responsibility is to create a reliable starting dataset.
 ---
 
 # 10. Historical Aggregated Data
-
 Lead scoring often requires more than just the current lead information.
 
 Historical data can provide additional signals.
@@ -493,8 +520,7 @@ Low Intent Lead
 ---
 
 # 11. Stitched Data
-
-The **Stitched Data** layer combines information from different sources.
+The ****Stitched Data**** layer combines information from different sources.
 
 Conceptually:
 
@@ -523,7 +549,6 @@ The stitched dataset should ideally contain:
 ---
 
 # 12. Identity Resolution
-
 A critical part of the pipeline is identifying and connecting information belonging to the same user.
 
 For example, a user may exist across:
@@ -575,15 +600,13 @@ Proper identity resolution is important because incorrect joins can cause:
 ---
 
 # 13. Feature Engineering
-
 Machine learning models do not directly understand raw business data.
 
-The pipeline converts raw information into **features**.
+The pipeline converts raw information into ****features****.
 
 Examples of possible feature categories include:
 
 ## Demographic Features
-
 ```text
 Location
 Pincode
@@ -591,7 +614,6 @@ Region
 ```
 
 ## Acquisition Features
-
 ```text
 Campaign
 Source
@@ -600,7 +622,6 @@ Channel
 ```
 
 ## Behavioral Features
-
 ```text
 Number of sessions
 Website engagement
@@ -610,7 +631,6 @@ Interaction history
 ```
 
 ## Historical Features
-
 ```text
 Past user activity
 Aggregated interactions
@@ -623,8 +643,7 @@ These features become the input to the machine learning model.
 ---
 
 # 14. Preventing Data Leakage
-
-One important engineering principle in the pipeline is avoiding **data leakage**.
+One important engineering principle in the pipeline is avoiding ****data leakage****.
 
 Data leakage happens when the model receives information that would not realistically be available at the time of prediction.
 
@@ -643,7 +662,7 @@ The model would appear more accurate during training but fail in real production
 
 Therefore:
 
-> Historical features should only use information available before the prediction time.
+\> Historical features should only use information available before the prediction time.
 
 Conceptually:
 
@@ -661,7 +680,6 @@ Future Data must not be used
 ---
 
 # 15. Model Inference
-
 Once the final feature dataset is ready, it is passed to the trained machine learning model.
 
 The inference process is executed through the scoring application.
@@ -693,7 +711,6 @@ The main inference process performs tasks such as:
 ---
 
 # 16. Prediction Output
-
 The model produces a prediction for each eligible lead.
 
 Conceptually:
@@ -737,7 +754,6 @@ The actual thresholds should be determined based on the production model and bus
 ---
 
 # 17. Scheduled Pipeline Execution
-
 The lead scoring pipeline is designed to run automatically.
 
 A conceptual schedule is:
@@ -787,7 +803,6 @@ Explicit dependencies are more reliable.
 ---
 
 # 18. End-to-End Data Flow
-
 The complete flow can be summarized as:
 
 ```text
@@ -832,7 +847,6 @@ The complete flow can be summarized as:
 ---
 
 # 19. Writing Scores Back to CRM
-
 After inference, the scored output needs to be made available to downstream systems.
 
 The pipeline can therefore follow:
@@ -861,7 +875,6 @@ The downstream CRM can then use the score for:
 ---
 
 # 20. Backfilling Leads
-
 A backfill is required when historical leads were not processed by the pipeline.
 
 For example:
@@ -894,14 +907,13 @@ Generate Predictions
 
 The key principle is:
 
-> A backfilled lead should ideally enter the pipeline through the same logical path as a normal production lead.
+\> A backfilled lead should ideally enter the pipeline through the same logical path as a normal production lead.
 
 This ensures consistency between historical and live processing.
 
 ---
 
 # 21. Backfill Example
-
 Conceptually:
 
 ```sql
@@ -923,11 +935,9 @@ After insertion, the expectation is that these leads become available for downst
 ---
 
 # 22. Important Backfill Considerations
-
 Before backfilling, the following should be validated.
 
 ## Schema Consistency
-
 The inserted data should match the expected schema.
 
 Important checks include:
@@ -943,7 +953,6 @@ Required fields
 ---
 
 ## Timestamp Consistency
-
 Timestamp fields such as:
 
 ```text
@@ -966,7 +975,6 @@ Incorrect timestamp formats can cause:
 ---
 
 ## Duplicate Prevention
-
 Before inserting historical data, check whether the lead already exists.
 
 Conceptually:
@@ -990,7 +998,6 @@ This is important because duplicate records may result in:
 ---
 
 # 23. Daily Incremental Processing
-
 The pipeline may process data using a daily schedule.
 
 For example:
@@ -1030,7 +1037,6 @@ This allows upstream systems time to complete data ingestion before scoring begi
 ---
 
 # 24. Important Consideration for T-1 Processing
-
 If the pipeline only processes:
 
 ```text
@@ -1078,12 +1084,11 @@ However, this depends on the production pipeline's idempotency and business logi
 ---
 
 # 25. Idempotency
-
-A production scoring pipeline should ideally be **idempotent**.
+A production scoring pipeline should ideally be ****idempotent****.
 
 This means:
 
-> Running the same pipeline multiple times should not create unintended duplicate results.
+\> Running the same pipeline multiple times should not create unintended duplicate results.
 
 For example:
 
@@ -1118,7 +1123,6 @@ Idempotency is especially important for:
 ---
 
 # 26. Recommended Processing State
-
 A robust system should track the state of every lead.
 
 For example:
@@ -1158,7 +1162,6 @@ This makes debugging and recovery easier.
 ---
 
 # 27. Watermark-Based Processing
-
 Instead of relying only on fixed dates, a robust pipeline can maintain a processing watermark.
 
 Example:
@@ -1200,13 +1203,11 @@ This helps with:
 ---
 
 # 28. Error Handling
-
 A production pipeline should not silently fail.
 
 Failures can occur at multiple stages.
 
 ## Data Ingestion Failure
-
 ```text
 Source unavailable
 Missing data
@@ -1214,7 +1215,6 @@ Schema changes
 ```
 
 ## BigQuery Failure
-
 ```text
 Permission denied
 Missing table
@@ -1223,7 +1223,6 @@ Quota issues
 ```
 
 ## Model Failure
-
 ```text
 Model unavailable
 Feature mismatch
@@ -1232,7 +1231,6 @@ Prediction error
 ```
 
 ## CRM Write Failure
-
 ```text
 API failure
 Authentication issue
@@ -1245,7 +1243,6 @@ Each stage should generate meaningful logs.
 ---
 
 # 29. Example Failure Flow
-
 ```text
 Lead Processing
       │
@@ -1276,7 +1273,6 @@ Success
 ---
 
 # 30. Monitoring
-
 The system should monitor both technical and business outcomes.
 
 Technical monitoring:
@@ -1331,7 +1327,6 @@ This makes it easier to identify where records are being lost.
 ---
 
 # 31. Recommended Alerting
-
 Alerts should focus on business impact.
 
 For example:
@@ -1363,9 +1358,7 @@ A job may technically succeed but still process zero records.
 ---
 
 # 32. Common Failure Scenarios
-
 ## Scenario 1: Lead Exists in Source but Not in Scoring
-
 Possible causes:
 
 ```text
@@ -1380,7 +1373,6 @@ Pipeline did not run
 ---
 
 ## Scenario 2: Lead Exists in Raw Data but Is Not Scored
-
 Possible causes:
 
 ```text
@@ -1394,7 +1386,6 @@ Filtering condition
 ---
 
 ## Scenario 3: Lead Is Scored but Not Updated in CRM
-
 Possible causes:
 
 ```text
@@ -1408,7 +1399,6 @@ Downstream query filter
 ---
 
 # 33. Debugging Strategy
-
 When a lead is missing, debugging should follow the complete data lineage.
 
 ```text
@@ -1450,12 +1440,11 @@ This approach is more reliable than debugging randomly.
 
 The principle is:
 
-> Start from where the failure is visible and trace the data backward through the pipeline.
+\> Start from where the failure is visible and trace the data backward through the pipeline.
 
 ---
 
 # 34. Data Lineage
-
 The data lineage for the system can be represented as:
 
 ```text
@@ -1504,7 +1493,6 @@ Was it successfully delivered downstream?
 ---
 
 # 35. Recommended Lead-Level Audit Fields
-
 A scored dataset should ideally maintain fields such as:
 
 ```text
@@ -1526,7 +1514,6 @@ These fields significantly improve debugging and reproducibility.
 ---
 
 # 36. Model Versioning
-
 The model used for scoring should be traceable.
 
 For example:
@@ -1552,16 +1539,14 @@ Example:
 
 This helps answer:
 
-> Which model generated this prediction?
+\> Which model generated this prediction?
 
 ---
 
 # 37. Retraining vs Inference
-
 It is important to distinguish between model training and daily scoring.
 
 ## Model Training
-
 ```text
 Historical Data
       ↓
@@ -1579,7 +1564,6 @@ This generally happens periodically.
 ---
 
 ## Model Inference
-
 ```text
 New Lead
       ↓
@@ -1596,50 +1580,40 @@ This happens regularly as part of the production pipeline.
 
 The daily lead scoring pipeline is primarily performing:
 
-> **Inference, not model training.**
+\> ****Inference, not model training.****
 
 ---
 
 # 38. Responsibilities of the Lead Scoring System
-
 The system is responsible for:
 
 ### Data Ingestion
-
 Collect incoming leads.
 
 ### Data Preparation
-
 Clean and standardize lead information.
 
 ### Feature Engineering
-
 Create model-compatible features.
 
 ### Historical Enrichment
-
 Add previous behavioral and CRM information.
 
 ### Prediction
-
 Run the trained model.
 
 ### Output Delivery
-
 Store and send the prediction to downstream systems.
 
 ### Monitoring
-
 Ensure expected leads are processed.
 
 ### Recovery
-
 Support retries and backfills.
 
 ---
 
 # 39. Complete Conceptual Architecture
-
 ```text
                         ┌─────────────────┐
                         │   LEAD SOURCES  │
@@ -1708,7 +1682,6 @@ Support retries and backfills.
 ---
 
 # 40. Key Takeaways
-
 The Lead Scoring System is an end-to-end machine learning inference pipeline that transforms raw lead information into actionable business intelligence.
 
 The complete lifecycle is:
@@ -1735,21 +1708,199 @@ Score Sent to CRM
 
 The most important engineering principles for maintaining the system are:
 
-1. **Ensure source-to-output data lineage is traceable.**
-2. **Prevent duplicate lead processing.**
-3. **Maintain schema consistency during backfills.**
-4. **Use timestamps consistently.**
-5. **Prevent data leakage in historical features.**
-6. **Prefer explicit dependencies over time-based CRON assumptions.**
-7. **Make the pipeline idempotent.**
-8. **Track processing state for each lead.**
-9. **Monitor business outcomes, not just job success.**
-10. **Support reliable backfills and recovery.**
-11. **Track model versions used for predictions.**
-12. **Trace every scored lead back to its source and pipeline execution.**
+1. ****Ensure source-to-output data lineage is traceable.****
+2. ****Prevent duplicate lead processing.****
+3. ****Maintain schema consistency during backfills.****
+4. ****Use timestamps consistently.****
+5. ****Prevent data leakage in historical features.****
+6. ****Prefer explicit dependencies over time-based CRON assumptions.****
+7. ****Make the pipeline idempotent.****
+8. ****Track processing state for each lead.****
+9. ****Monitor business outcomes, not just job success.****
+10. ****Support reliable backfills and recovery.****
+11. ****Track model versions used for predictions.****
+12. ****Trace every scored lead back to its source and pipeline execution.****
 
 ---
 
 # 41. One-Line Summary
+\> ****The Lead Scoring System collects leads from multiple sources, enriches them with historical and behavioral information, prepares machine-learning features, uses a trained model to predict conversion likelihood, and sends the resulting score back to downstream business systems for lead prioritization and action.****
 
-> **The Lead Scoring System collects leads from multiple sources, enriches them with historical and behavioral information, prepares machine-learning features, uses a trained model to predict conversion likelihood, and sends the resulting score back to downstream business systems for lead prioritization and action.**
+# Part II — Royal Enfield Production Implementation — By Tatvic
+
+(This section documents exactly how the concepts in Part 1 are implemented for Royal Enfield's live production system, including real table names, known limitations, and fixes applied.)
+
+42. RE Lead Scoring — Real Architecture Overview
+
+Unlike the conceptual pipeline in Part 1, the RE system runs across three separate scheduled services, each independently triggered by Cloud Scheduler, connected only through shared BigQuery tables — not a single unified pipeline.
+
+```text
+CRM INGESTION                GA4 JOIN + SCORING           DMS DELIVERY
+(daily-btr-data-             (New_30day_logic_           (scored-leads-backto-
+ export-to-bq-v2)             real_time → model)           web-crm)
+      │                             │                             │
+      ▼                             ▼                             ▼
+RE_web_crm_data_*  ────►  audience_l2_lead_score_*  ────►  dms_raw_data  ────►  DMS API
+(every \~15 min)            (scoring, every \~15 min)         (push, every \~15 min)
+
+Each stage reads from the previous stage's output table. There is no single orchestrator — reliability depends entirely on each service running on schedule and each query's filters correctly catching all eligible leads.
+
+```
+43. RE Data Sources — Real Table Names
+Concept (Part 1 term)   Actual RE Table
+Raw Lead Data     re-platform-model-dl.web_crm_data.RE_web_crm_data_* (date-sharded, one table per day)
+Feature Dataset / Stitched Data     re-platform-model-dl.sept_test_ls.New_30day_logic_real_time (GA4 ↔ CRM join view)
+Prediction Output re-platform-model-dl.ga4_ls_model_dataset.audience_l2_lead_score_* (date-sharded)
+Routing/Delivery staging table      re-platform-model-dl.dms_logs.dms_raw_data
+Dashboard/reporting snapshot  re-platform-model-dl.tvc_reports.leads_count_t-1 and re-platform-model-dl.dms_logs.lead_traking_dashboard
+
+Key correction to Part 1's diagram: dms_raw_data is NOT the raw ingestion table for RE — that role belongs to RE_web_crm_data_*. dms_raw_data is actually the delivery/routing staging table, sitting just before the DMS API push. Worth keeping this straight, since the generic doc's diagram places dms_raw_data at "Raw Lead Data," which does not match RE's real architecture.
+
+44. RE Identity Resolution — clientId & GA4 client_id
+
+RE's identity resolution joins two systems on a single field:
+
+CRM side: clientId — captured on the RE website at the moment a lead form is submitted (this is the GA4 browser client_id cookie value, passed through the form).
+GA4 side: custom_client_id — a user property extracted from GA4 event data via:
+```sql
+(SELECT up.value.string_value FROM UNNEST(user_properties) up WHERE up.key = 'custom_client_id')
+
+The join condition is:
+
+```sql
+ON a.client_id = b.clientid_crm AND a.event_date = b.date_crm
+
+Critical limitation not covered in Part 1's generic identity resolution section: if clientId is blank at the CRM level (which happens routinely — confirmed across multiple production days, roughly 40–85% of any given day's dropped leads), there is no fallback identity resolution mechanism. The lead is unconditionally excluded from scoring at this stage — this is the single most common cause of "missing" leads in the RE pipeline.
+
+45. RE GA4 Behavioral Data Window & Hostname Restriction
+
+Unlike Part 1's generic "use available historical data" guidance, RE's GA4 join has two hard, specific constraints:
+
+1. A strict 45-minute rolling window, reading only from ephemeral intraday data:
+
+```sql
+FROM `re-enterprise-dl.analytics_253617568.events_intraday_*`
+WHERE TIMESTAMP_DIFF(CURRENT_TIMESTAMP(), event_timestamp, MINUTE) <= 45
+
+There is no fallback to GA4's finalized (non-intraday) daily export tables. Once this 45-minute window passes without a match, that specific opportunity is gone — permanently, with no retry.
+
+```
+2. An exact-match hostname whitelist:
+
+```sql
+REGEXP_CONTAINS(device.web_info.hostname, "^www.royalenfield.com$|^finance.royalenfield.com$|^accessories.royalenfield.com$|^makeityours.royalenfield.com$")
+
+Only these four subdomains are eligible. GA4 activity on any other RE-owned hostname is invisible to this join, regardless of lead validity.
+
+```
+46. RE Feature Engineering — Hardcoded Capping (Live Implementation)
+
+RE's pre_processing() scoring script implements Part 1's "Feature Engineering" concept via hardcoded categorical whitelists, frozen at model training time (gcs_model_path="sept_model"). Any value outside these lists collapses into a generic bucket:
+
+Feature     Capped to   Fallback bucket
+source      8 known ad sources      'other sources'
+medium      8 known mediums   'other_mediums'
+browser     7 known browsers  'other_browsers'
+bikemodel   \~19 named models (frozen at Sept)   'other_bk_models'
+city  Fixed A-1/A/B-1/B-2 tier lists      '(Others)'
+
+RE-specific risk not present in Part 1's generic guidance: any bike model launched after the model's training date (e.g., newer models like Bear 650 observed in raw CRM data) still gets scored — but silently miscategorized into 'other_bk_models', reducing prediction accuracy without any error or alert.
+
+47. RE Model — Version & Threshold Logic
+Model artifact: ls_sept_model_23.pkl, a CatBoost classifier, stored in GCS bucket kubeflow-ls-model.
+Bucket assignment (RE's real implementation of Part 1's "High/Medium/Low" example):
+```text
+lead_score >= 0.57                          → bucket 1 (Hot, leadpriority 163650001)
+lower_thresh <= lead_score < 0.57            → bucket 2 (Warm, leadpriority 163650002)
+lead_score < lower_thresh                    → bucket 3 (Cold, leadpriority 163650003)
+
+where lower_thresh/higher_thresh are recalculated per run from that batch's own score quantiles (0.3/0.7), unless explicit thresholds are passed.
+
+Model versioning gap (relative to Part 1 Section 36's recommendation): the current pipeline does not store a model_version field anywhere in audience_l2_lead_score_* or dms_raw_data. There is no way, today, to trace which model version produced a given historical score — this is a real gap against Part 1's recommended audit fields.
+
+```
+48. RE Output & Delivery — Multiple Parallel Paths
+
+Unlike Part 1's single "Routing & Delivery Layer," RE's DMS-push query (ga_leadscoring_data) has three separate branches feeding into dms_raw_data, only one of which reflects genuine model scoring:
+
+pred_data — genuinely scored leads (crm INNER JOIN audience_l2_lead_score_*, pred_time < 16 min window).
+remaining_leads_data — fallback for leads with a valid clientId that missed genuine scoring (pred_time = '', createdontime diff between 1–25 min).
+fb_instant_lead_form — a Facebook-specific fast path, 20-minute window, bypasses the clientId requirement entirely (the only branch that does).
+
+This means "scored" and "delivered to DMS" are not the same thing in RE's system. Any dashboard or report must distinguish pred_time != '' (genuinely scored) from pred_time = '' (fallback/unscored placeholder) to be accurate.
+
+49. RE's Complete List of Leakage Gates (Confirmed via Production Debugging)
+Gate  Stage Effect if failed
+Blank clientId    CRM → GA4 join    Unconditional exclusion, every branch except Facebook fast-path
+No matching GA4 session in 45-min window  GA4 join    Excluded from scoring candidacy entirely
+GA4 session on non-whitelisted hostname   GA4 join    Excluded, even with valid clientId + timing
+TIME()-only comparisons near midnight (23:45–00:15 IST)     Multiple queries  Silent exclusion from both scoring and fallback delivery due to date-rollover math error
+remaining_leads_data's 24-min window vs. 15-min run cadence DMS delivery      Duplicate delivery (opposite failure — same lead pushed twice), confirmed present on every day audited (Aug 1–9)
+
+Pincode was tested and confirmed NOT a leakage gate — it only affects which leadpriority sub-bucket a lead receives, never eligibility.
+
+50. RE Known Bugs & Fixes Applied (Live Incident History)
+Date found  Bug   Root cause  Status
+Aug 2 45-min scoring gap → false "no leads scored" alert investigation  Two consecutive scoring cycles (05:32, 05:47) silently didn't execute, despite healthy upstream inputs      Root-caused; owning scheduler still needs identification
+Aug 1–9 (ongoing) Duplicate rows in dms_raw_data (up to 586/day observed)     remaining_leads_data's 24-min window overlapping a 15-min run cadence, no dedup against existing dms_raw_data rows      Fix drafted (NOT IN exclusion clause), not yet deployed to production query
+Aug 6 Dashboard (leads_count_t-1) showing stale count after backfill    Table is a one-time daily snapshot with no re-sync mechanism      Fixed via MERGE-based update query
+Ongoing     email_alert_for_dms() crash (NameError: url)    url/headers variables commented out but requests.post() call left active      Fixed
+51. RE's Recon/Backfill System — "The Sweeper"
+
+To address the leakage gates in Section 49 without waiting for root-cause fixes to every upstream query, a dedicated daily reconciliation Cloud Function (daily-leads-reconciliation) was built:
+
+```text
+Runs once daily (\~01:00 AM IST)
+      │
+      ▼
+Scans T-1 and T-0 CRM partitions
+      │
+      ▼
+Finds leadIds NOT present in dms_raw_data (universal sweep, no filter conditions)
+      │
+      ▼
+Pushes entire batch to DMS API in ONE request (matches production's proven batching pattern)
+      │
+      ▼
+Logs successful pushes into dms_raw_data (pred_time = '', so they remain honestly flagged as unscored)
+
+Important distinction from Part 1's Section 20–22 backfill guidance: this sweeper does not re-enter the normal scoring pipeline — it delivers directly to DMS with a generic leadpriority = 163650002 / leadinsights = 'Pitch for GMA', bypassing scoring entirely. This is a deliberate design choice (deliver-something over deliver-nothing), not a limitation to fix — but it means swept leads never receive genuine model-driven scores.
+
+Verified via production data (Aug 7–9): zero duplicate leadId overlap across sweep days, confirming the sweeper's own dedup logic works correctly, independent of the separate remaining_leads_data bug in Section 50.
+
+```
+52. RE Monitoring & Alerting — Live Implementation
+
+Three separate alert mechanisms exist, corresponding to Part 1 Section 31's guidance, each with its own known behavior:
+
+Alert Trigger condition Known issue
+CRM ingestion alert     0 rows in RE_web_crm_data_* in last 60 min      Prone to false positives during naturally low-traffic hours (confirmed early-morning near-misses)
+DMS scoring alert 0 rows in dms_raw_data with pred_time != '' in last 16/30 min     Correctly caught the genuine Aug 2 scoring gap (true positive, root-caused)
+Both alerts TIME()-only comparisons Same midnight-rollover bug as Section 49 — can misfire near 12:00 AM IST regardless of actual pipeline health
+53. RE Dashboard & Reporting (Looker Studio + BigQuery Snapshots)
+
+RE's live dashboard ([Royal Enfield] Lead Scoring Dashboard - GA4) is powered by daily-snapshot BigQuery tables, not live queries against dms_raw_data directly. This means:
+
+Dashboard numbers reflect the state of dms_raw_data at the moment the snapshot query last ran, not real-time.
+Any backfill or sweep that happens after that day's snapshot query executed will not be reflected until the snapshot table is manually or automatically re-synced.
+Always use COUNT(DISTINCT leadId) in any reporting query touching dms_raw_data — confirmed necessary due to the Section 50 duplication bug; plain COUNT(*) will overstate numbers.
+54. RE UAT Environment — Structurally Separate System
+
+RE maintains a separate, unrelated UAT script (targeting api-uat2.royalenfield.com) for test-lead validation. This is worth documenting clearly because it is easy to mistake for a UAT mirror of the production pipeline — it is not:
+
+Fetches leads via a direct fetch-btr-leads GET API call, not from RE_web_crm_data_*.
+Uses hardcoded, rule-based priority logic (last character of leadId mapped to fixed ranges) — not the real ML model.
+Has no connection to audience_l2_lead_score_*, dms_raw_data, or the sweeper.
+Now also stores leads to a dedicated 30-day rolling-retention BigQuery table (uat_leads_hardcoded_priority), separate from production reporting tables, named explicitly to prevent confusion with genuinely-scored data.
+55. RE Glossary — Internal Table & Service Names
+Term  Meaning
+RE_web_crm_data_* Daily-sharded raw CRM lead ingestion table
+New_30day_logic_real_time     GA4 ↔ CRM identity-resolution and candidate-selection view
+audience_l2_lead_score_*      Daily-sharded genuine model scoring output
+dms_raw_data      Pre-DMS-delivery staging table (mix of genuinely scored + fallback leads)
+daily-btr-data-export-to-bq-v2      CRM ingestion Cloud Run service
+scored-leads-backto-web-crm   DMS-push Cloud Run service
+crm_lead_scoring_alert_v1     Alerting Cloud Function
+daily-leads-reconciliation    The sweeper/backfill Cloud Function
+lead_traking_dashboard / leads_count_t-1  Dashboard-facing snapshot tables
+pred_time = ''    Convention indicating a lead reached DMS via fallback/sweep, not genuine scoring
