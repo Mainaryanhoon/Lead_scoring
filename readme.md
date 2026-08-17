@@ -59,6 +59,46 @@ The overall objective is:
 \> ****Capture leads → enrich them with historical and behavioral information → generate predictions → make the scored leads available to downstream CRM/business systems.****
 
 This helps the business prioritize high-value leads and focus sales or marketing efforts on users with a higher probability of conversion.
+# Royal Enfield Lead Scoring — Production Architecture & Implementation
+
+This document outlines the complete, live production implementation of the Royal Enfield (RE) Lead Scoring system by Tatvic. It details the real data pipelines, table schemas, known limitations, bugs, reconciliation systems, and UAT environments.
+
+## 1. Real Architecture Overview
+
+The RE system runs across separate scheduled services, independently triggered by Cloud Scheduler and connected through shared BigQuery tables rather than a single unified orchestrated pipeline.
+
+The correct production data flow is:
+
+```mermaid
+flowchart LR
+
+    Ingestion[CRM INGESTION<br/>daily-btr-data-export-to-bq-v2]
+        -->|every ~15 min|
+    RawCRM[RE_web_crm_data_*<br/>Raw CRM / Initial Lead Storage]
+
+    RawCRM
+        -->|GA4 join + candidate selection / scoring|
+    FeatureLogic[New_30day_logic_real_time<br/>GA4 + CRM Join / Candidate Selection]
+
+    FeatureLogic
+        -->|Model Inference|
+    Scoring[Lead Scoring Model]
+
+    Scoring
+        -->|Genuine Model Predictions|
+    ScoredOutput[audience_l2_lead_score_*<br/>Final Model Scoring Output]
+
+    ScoredOutput
+        -->|Delivery preparation|
+    Staging[dms_raw_data<br/>Pre-DMS Delivery / Routing Staging]
+
+    Staging
+        -->|Push every ~15 min|
+    Delivery[scored-leads-backto-web-crm]
+
+    Delivery
+        -->|API Request|
+
 
 ---
 
@@ -124,7 +164,7 @@ The overall flow of the system can be represented as:
                            v
                  +-------------------+
                  |   Raw Lead Data   |
-                 |   dms_raw_data    |
+                 |      web_crm      |
                  +---------+---------+
                            |
                            v
@@ -159,7 +199,7 @@ The overall flow of the system can be represented as:
                            |
                            v
                  +-------------------+
-                 | CRM / Web CRM /   |
+                 | Dms_raw table     |
                  | Business System   |
                  +-------------------+
 ```
@@ -175,7 +215,7 @@ The raw data layer stores incoming lead information.
 One of the key tables involved is:
 
 ```text
-re-platform-model-dl.dms_logs.dms_raw_data
+re-platform-model-dl.web_crm table
 ```
 
 This table acts as a central raw or intermediate source for leads entering the scoring pipeline.
@@ -654,7 +694,7 @@ The complete flow can be summarized as:
                       │
                       ▼
               RAW LEAD DATA
-               dms_raw_data
+               web_crm
                       │
                       ▼
                 BASE DATA
@@ -678,7 +718,7 @@ The complete flow can be summarized as:
               SCORED OUTPUT
                       │
                       ▼
-               WEB CRM / CRM
+               Dms_raw
 ```
 
 ---
@@ -697,7 +737,7 @@ Prediction
    ↓
 Scored Lead
    ↓
-Web CRM
+DMS RAW
 ```
 
 The downstream CRM can then use the score for:
